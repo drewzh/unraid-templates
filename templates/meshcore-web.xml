@@ -11,7 +11,7 @@
     <Project>https://github.com/drewzh/meshcore-web-docker</Project>
     <Overview>
         Dockerized, self-updating mirror of the MeshCore web client (https://app.meshcore.nz/).
-        On start it mirrors the site into /data/releases/&lt;timestamp&gt;, compares content hash,
+        On start it mirrors the site into /data/releases/timestamp, compares content hash,
         and atomically switches /data/current if a new version exists. Nginx serves /data/current.
         If upstream is unreachable, it serves the last good version from the volume.
 
