@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Container>
-    <Name>MeshCore Web (Self-Updating Mirror)</Name>
+    <Name>MeshCore Web Docker</Name>
     <Repository>ghcr.io/drewzh/meshcore-web-docker:latest</Repository>
     <Registry>https://ghcr.io/drewzh/meshcore-web-docker</Registry>
     <Network>bridge</Network>
@@ -10,15 +10,21 @@
     <Support>https://github.com/drewzh/meshcore-web-docker/issues</Support>
     <Project>https://github.com/drewzh/meshcore-web-docker</Project>
     <Overview>
-        Dockerized, self-updating mirror of the MeshCore web client (https://app.meshcore.nz/).
-        On start it mirrors the site into /data/releases/timestamp, compares content hash,
-        and atomically switches /data/current if a new version exists. Nginx serves /data/current.
-        If upstream is unreachable, it serves the last good version from the volume.
+        A Docker container that downloads and hosts the MeshCore web application from
+        files.liamcottle.net.
+        Features runtime download of the latest MeshCore version, version management with atomic
+        switching,
+        persistent storage for faster subsequent starts, and graceful fallback to cached versions.
+        **IMPORTANT:** HTTPS is required for Bluetooth features. This container serves HTTP only and
+        should be
+        used behind a reverse proxy (nginx Proxy Manager, Traefik, Caddy, etc.) for HTTPS
+        termination.
 
-        **Permission:** App is mirrored with permission from the original author.
-        **Note:** Mirroring is constrained to the primary domain to avoid pulling third-party CDNs.
+        The container automatically detects and downloads the latest version on startup, with
+        support for
+        loading pages during download and zero-downtime version switching using symlinks.
     </Overview>
-    <Category>Productivity: Tools;Network:Web</Category>
+    <Category>Network:Web;Productivity:Tools</Category>
     <WebUI>http://[IP]:[PORT:8080]/</WebUI>
     <TemplateURL />
     <Icon>https://raw.githubusercontent.com/drewzh/unraid-templates/main/icons/meshcore-web.png</Icon>
@@ -28,7 +34,8 @@
     <DateInstalled></DateInstalled>
     <DonateText></DonateText>
     <DonateLink></DonateLink>
-    <Description>Self-updating static mirror of MeshCore Web, served by Nginx</Description>
+    <Description>Docker container hosting MeshCore web application with automatic updates and
+        version management</Description>
     <Networking>
         <Mode>bridge</Mode>
         <Publish>
@@ -42,49 +49,62 @@
     </Networking>
     <Data>
         <Volume>
-            <HostDir>/mnt/user/appdata/meshcore-web</HostDir>
-            <ContainerDir>/data</ContainerDir>
+            <HostDir>/mnt/user/appdata/meshcore-web/versions</HostDir>
+            <ContainerDir>/app/versions</ContainerDir>
             <Mode>rw</Mode>
-            <Description>Persistent data (releases + current)</Description>
+            <Description>Persistent storage for MeshCore versions and cache</Description>
         </Volume>
     </Data>
     <Environment>
         <Variable>
-            <Name>SITE_URL</Name>
-            <Value>https://app.meshcore.nz/</Value>
+            <Name>TZ</Name>
+            <Value>Europe/London</Value>
             <Mode></Mode>
-            <Description>Upstream site to mirror at start</Description>
-            <Required>true</Required>
-            <Mask>false</Mask>
-        </Variable>
-        <Variable>
-            <Name>FORCE_REFRESH</Name>
-            <Value>false</Value>
-            <Mode></Mode>
-            <Description>Set to true to force a full re-download on next start</Description>
+            <Description>Container timezone (e.g., America/New_York, Europe/London, UTC)</Description>
             <Required>false</Required>
             <Mask>false</Mask>
         </Variable>
         <Variable>
-            <Name>ALLOW_DOMAIN</Name>
-            <Value>app.meshcore.nz</Value>
+            <Name>MESHCORE_BASE_URL</Name>
+            <Value>https://files.liamcottle.net/MeshCore</Value>
             <Mode></Mode>
-            <Description>Primary domain to mirror (safety limit)</Description>
+            <Description>Base URL for MeshCore downloads (default is official source)</Description>
+            <Required>false</Required>
+            <Mask>false</Mask>
+        </Variable>
+        <Variable>
+            <Name>PUID</Name>
+            <Value>99</Value>
+            <Mode></Mode>
+            <Description>User ID for file permissions (Unraid compatibility)</Description>
+            <Required>false</Required>
+            <Mask>false</Mask>
+        </Variable>
+        <Variable>
+            <Name>PGID</Name>
+            <Value>100</Value>
+            <Mode></Mode>
+            <Description>Group ID for file permissions (Unraid compatibility)</Description>
             <Required>false</Required>
             <Mask>false</Mask>
         </Variable>
     </Environment>
     <Labels />
     <Config Name="HTTP Port" Target="80" Default="8080" Mode="tcp" Type="Port" Display="always"
-        Required="true" Mask="false">Container web UI port</Config>
-    <Config Name="Data" Target="/data" Default="/mnt/user/appdata/meshcore-web" Mode="rw"
-        Type="Path" Display="always" Required="true" Mask="false">Persistent data directory</Config>
-    <Config Name="SITE_URL" Target="SITE_URL" Default="https://app.meshcore.nz/" Type="Variable"
-        Display="always" Required="true" Mask="false">Upstream site to mirror</Config>
-    <Config Name="FORCE_REFRESH" Target="FORCE_REFRESH" Default="false" Type="Variable"
-        Display="advanced" Required="false" Mask="false">Force re-download on next start</Config>
-    <Config Name="ALLOW_DOMAIN" Target="ALLOW_DOMAIN" Default="app.meshcore.nz" Type="Variable"
-        Display="advanced" Required="false" Mask="false">Domain safety constraint</Config>
+        Required="true" Mask="false">Container web UI port (HTTP only - use reverse proxy for HTTPS)</Config>
+    <Config Name="Versions Data" Target="/app/versions"
+        Default="/mnt/user/appdata/meshcore-web/versions" Mode="rw"
+        Type="Path" Display="always" Required="true" Mask="false">Persistent storage for MeshCore
+        versions and cache</Config>
+    <Config Name="TZ" Target="TZ" Default="Europe/London" Type="Variable"
+        Display="always" Required="false" Mask="false">Container timezone</Config>
+    <Config Name="MESHCORE_BASE_URL" Target="MESHCORE_BASE_URL"
+        Default="https://files.liamcottle.net/MeshCore" Type="Variable"
+        Display="advanced" Required="false" Mask="false">Base URL for MeshCore downloads</Config>
+    <Config Name="PUID" Target="PUID" Default="99" Type="Variable"
+        Display="advanced" Required="false" Mask="false">User ID for file permissions</Config>
+    <Config Name="PGID" Target="PGID" Default="100" Type="Variable"
+        Display="advanced" Required="false" Mask="false">Group ID for file permissions</Config>
     <DonateText />
     <DonateLink />
     <Requires>Docker</Requires>
