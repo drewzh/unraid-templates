@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<Container>
+    <Name>MeshCore Web (Self-Updating Mirror)</Name>
+    <Repository>ghcr.io/drewzh/meshcore-web-docker:latest</Repository>
+    <Registry>https://ghcr.io/drewzh/meshcore-web-docker</Registry>
+    <Network>bridge</Network>
+    <MyIP />
+    <Shell>bash</Shell>
+    <Privileged>false</Privileged>
+    <Support>https://github.com/drewzh/meshcore-web-docker/issues</Support>
+    <Project>https://github.com/drewzh/meshcore-web-docker</Project>
+    <Overview>
+        Dockerized, self-updating mirror of the MeshCore web client (https://app.meshcore.nz/).
+        On start it mirrors the site into /data/releases/&lt;timestamp&gt;, compares content hash,
+        and atomically switches /data/current if a new version exists. Nginx serves /data/current.
+        If upstream is unreachable, it serves the last good version from the volume.
+
+        **Permission:** App is mirrored with permission from the original author.
+        **Note:** Mirroring is constrained to the primary domain to avoid pulling third-party CDNs.
+    </Overview>
+    <Category>Productivity: Tools;Network:Web</Category>
+    <WebUI>http://[IP]:[PORT:8080]/</WebUI>
+    <TemplateURL />
+    <Icon>https://raw.githubusercontent.com/drewzh/unraid-templates/main/icons/meshcore-web.png</Icon>
+    <ExtraParams></ExtraParams>
+    <PostArgs></PostArgs>
+    <CPUset></CPUset>
+    <DateInstalled></DateInstalled>
+    <DonateText></DonateText>
+    <DonateLink></DonateLink>
+    <Description>Self-updating static mirror of MeshCore Web, served by Nginx</Description>
+    <Networking>
+        <Mode>bridge</Mode>
+        <Publish>
+            <Port>
+                <HostPort>8080</HostPort>
+                <ContainerPort>80</ContainerPort>
+                <Protocol>tcp</Protocol>
+                <Description>HTTP port</Description>
+            </Port>
+        </Publish>
+    </Networking>
+    <Data>
+        <Volume>
+            <HostDir>/mnt/user/appdata/meshcore-web</HostDir>
+            <ContainerDir>/data</ContainerDir>
+            <Mode>rw</Mode>
+            <Description>Persistent data (releases + current)</Description>
+        </Volume>
+    </Data>
+    <Environment>
+        <Variable>
+            <Name>SITE_URL</Name>
+            <Value>https://app.meshcore.nz/</Value>
+            <Mode></Mode>
+            <Description>Upstream site to mirror at start</Description>
+            <Required>true</Required>
+            <Mask>false</Mask>
+        </Variable>
+        <Variable>
+            <Name>FORCE_REFRESH</Name>
+            <Value>false</Value>
+            <Mode></Mode>
+            <Description>Set to true to force a full re-download on next start</Description>
+            <Required>false</Required>
+            <Mask>false</Mask>
+        </Variable>
+        <Variable>
+            <Name>ALLOW_DOMAIN</Name>
+            <Value>app.meshcore.nz</Value>
+            <Mode></Mode>
+            <Description>Primary domain to mirror (safety limit)</Description>
+            <Required>false</Required>
+            <Mask>false</Mask>
+        </Variable>
+    </Environment>
+    <Labels />
+    <Config Name="HTTP Port" Target="80" Default="8080" Mode="tcp" Type="Port" Display="always"
+        Required="true" Mask="false">Container web UI port</Config>
+    <Config Name="Data" Target="/data" Default="/mnt/user/appdata/meshcore-web" Mode="rw"
+        Type="Path" Display="always" Required="true" Mask="false">Persistent data directory</Config>
+    <Config Name="SITE_URL" Target="SITE_URL" Default="https://app.meshcore.nz/" Type="Variable"
+        Display="always" Required="true" Mask="false">Upstream site to mirror</Config>
+    <Config Name="FORCE_REFRESH" Target="FORCE_REFRESH" Default="false" Type="Variable"
+        Display="advanced" Required="false" Mask="false">Force re-download on next start</Config>
+    <Config Name="ALLOW_DOMAIN" Target="ALLOW_DOMAIN" Default="app.meshcore.nz" Type="Variable"
+        Display="advanced" Required="false" Mask="false">Domain safety constraint</Config>
+    <DonateText />
+    <DonateLink />
+    <Requires>Docker</Requires>
+    <NetworkingMode>bridge</NetworkingMode>
+    <Beta>false</Beta>
+    <RepoShort>ghcr.io/drewzh/meshcore-web-docker</RepoShort>
+</Container>
