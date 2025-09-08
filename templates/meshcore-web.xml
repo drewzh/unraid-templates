@@ -10,8 +10,8 @@
     <Support>https://github.com/drewzh/meshcore-web-docker/issues</Support>
     <Project>https://github.com/drewzh/meshcore-web-docker</Project>
     <Overview>A Docker container that downloads and hosts the MeshCore web application. Features automatic version management and persistent storage.</Overview>
-    <Category>Network:Web;Productivity:Tools</Category>
-    <WebUI>http://[IP]:[PORT:8080]/</WebUI>
+    <Category>Network:Web</Category>
+    <WebUI>http://[IP]:[PORT:80]/</WebUI>
     <TemplateURL />
     <Icon>https://raw.githubusercontent.com/drewzh/unraid-templates/main/icons/meshcore-web.png</Icon>
     <ExtraParams></ExtraParams>
