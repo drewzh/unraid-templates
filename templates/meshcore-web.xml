@@ -9,21 +9,8 @@
     <Privileged>false</Privileged>
     <Support>https://github.com/drewzh/meshcore-web-docker/issues</Support>
     <Project>https://github.com/drewzh/meshcore-web-docker</Project>
-    <Overview>
-        A Docker container that downloads and hosts the MeshCore web application from
-        files.liamcottle.net.
-        Features runtime download of the latest MeshCore version, version management with atomic
-        switching,
-        persistent storage for faster subsequent starts, and graceful fallback to cached versions.
-        **IMPORTANT:** HTTPS is required for Bluetooth features. This container serves HTTP only and
-        should be
-        used behind a reverse proxy (nginx Proxy Manager, Traefik, Caddy, etc.) for HTTPS
-        termination.
-
-        The container automatically detects and downloads the latest version on startup, with
-        support for
-        loading pages during download and zero-downtime version switching using symlinks.
-    </Overview>
+    <Overview>A Docker container that downloads and hosts the MeshCore web application. Features
+        automatic version management and persistent storage.</Overview>
     <Category>Network:Web;Productivity:Tools</Category>
     <WebUI>http://[IP]:[PORT:8080]/</WebUI>
     <TemplateURL />
@@ -34,8 +21,7 @@
     <DateInstalled></DateInstalled>
     <DonateText></DonateText>
     <DonateLink></DonateLink>
-    <Description>Docker container hosting MeshCore web application with automatic updates and
-        version management</Description>
+    <Description>Docker container hosting MeshCore web application with automatic updates</Description>
     <Networking>
         <Mode>bridge</Mode>
         <Publish>
@@ -52,7 +38,7 @@
             <HostDir>/mnt/user/appdata/meshcore-web/versions</HostDir>
             <ContainerDir>/app/versions</ContainerDir>
             <Mode>rw</Mode>
-            <Description>Persistent storage for MeshCore versions and cache</Description>
+            <Description>Persistent storage for MeshCore versions</Description>
         </Volume>
     </Data>
     <Environment>
@@ -60,7 +46,7 @@
             <Name>TZ</Name>
             <Value>Europe/London</Value>
             <Mode></Mode>
-            <Description>Container timezone (e.g., America/New_York, Europe/London, UTC)</Description>
+            <Description>Container timezone</Description>
             <Required>false</Required>
             <Mask>false</Mask>
         </Variable>
@@ -68,7 +54,7 @@
             <Name>MESHCORE_BASE_URL</Name>
             <Value>https://files.liamcottle.net/MeshCore</Value>
             <Mode></Mode>
-            <Description>Base URL for MeshCore downloads (default is official source)</Description>
+            <Description>Base URL for MeshCore downloads</Description>
             <Required>false</Required>
             <Mask>false</Mask>
         </Variable>
@@ -76,7 +62,7 @@
             <Name>PUID</Name>
             <Value>99</Value>
             <Mode></Mode>
-            <Description>User ID for file permissions (Unraid compatibility)</Description>
+            <Description>User ID for file permissions</Description>
             <Required>false</Required>
             <Mask>false</Mask>
         </Variable>
@@ -84,27 +70,26 @@
             <Name>PGID</Name>
             <Value>100</Value>
             <Mode></Mode>
-            <Description>Group ID for file permissions (Unraid compatibility)</Description>
+            <Description>Group ID for file permissions</Description>
             <Required>false</Required>
             <Mask>false</Mask>
         </Variable>
     </Environment>
     <Labels />
     <Config Name="HTTP Port" Target="80" Default="8080" Mode="tcp" Type="Port" Display="always"
-        Required="true" Mask="false">Container web UI port (HTTP only - use reverse proxy for HTTPS)</Config>
-    <Config Name="Versions Data" Target="/app/versions"
-        Default="/mnt/user/appdata/meshcore-web/versions" Mode="rw"
-        Type="Path" Display="always" Required="true" Mask="false">Persistent storage for MeshCore
-        versions and cache</Config>
-    <Config Name="TZ" Target="TZ" Default="Europe/London" Type="Variable"
-        Display="always" Required="false" Mask="false">Container timezone</Config>
+        Required="true" Mask="false">Container web UI port</Config>
+    <Config Name="Data" Target="/app/versions" Default="/mnt/user/appdata/meshcore-web/versions"
+        Mode="rw" Type="Path" Display="always" Required="true" Mask="false">Persistent storage for
+        MeshCore versions</Config>
+    <Config Name="TZ" Target="TZ" Default="Europe/London" Type="Variable" Display="always"
+        Required="false" Mask="false">Container timezone</Config>
     <Config Name="MESHCORE_BASE_URL" Target="MESHCORE_BASE_URL"
-        Default="https://files.liamcottle.net/MeshCore" Type="Variable"
-        Display="advanced" Required="false" Mask="false">Base URL for MeshCore downloads</Config>
-    <Config Name="PUID" Target="PUID" Default="99" Type="Variable"
-        Display="advanced" Required="false" Mask="false">User ID for file permissions</Config>
-    <Config Name="PGID" Target="PGID" Default="100" Type="Variable"
-        Display="advanced" Required="false" Mask="false">Group ID for file permissions</Config>
+        Default="https://files.liamcottle.net/MeshCore" Type="Variable" Display="advanced"
+        Required="false" Mask="false">Base URL for MeshCore downloads</Config>
+    <Config Name="PUID" Target="PUID" Default="99" Type="Variable" Display="advanced"
+        Required="false" Mask="false">User ID for file permissions</Config>
+    <Config Name="PGID" Target="PGID" Default="100" Type="Variable" Display="advanced"
+        Required="false" Mask="false">Group ID for file permissions</Config>
     <DonateText />
     <DonateLink />
     <Requires>Docker</Requires>
