@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <Container>
-    <Name>MeshCore Web Docker</Name>
+    <Name>meshcore-web-docker</Name>
     <Repository>ghcr.io/drewzh/meshcore-web-docker:latest</Repository>
     <Registry>https://ghcr.io/drewzh/meshcore-web-docker</Registry>
     <Network>bridge</Network>
@@ -9,8 +9,7 @@
     <Privileged>false</Privileged>
     <Support>https://github.com/drewzh/meshcore-web-docker/issues</Support>
     <Project>https://github.com/drewzh/meshcore-web-docker</Project>
-    <Overview>A Docker container that downloads and hosts the MeshCore web application. Features
-        automatic version management and persistent storage.</Overview>
+    <Overview>A Docker container that downloads and hosts the MeshCore web application. Features automatic version management and persistent storage.</Overview>
     <Category>Network:Web;Productivity:Tools</Category>
     <WebUI>http://[IP]:[PORT:8080]/</WebUI>
     <TemplateURL />
@@ -76,20 +75,12 @@
         </Variable>
     </Environment>
     <Labels />
-    <Config Name="HTTP Port" Target="80" Default="8080" Mode="tcp" Type="Port" Display="always"
-        Required="true" Mask="false">Container web UI port</Config>
-    <Config Name="Data" Target="/app/versions" Default="/mnt/user/appdata/meshcore-web/versions"
-        Mode="rw" Type="Path" Display="always" Required="true" Mask="false">Persistent storage for
-        MeshCore versions</Config>
-    <Config Name="TZ" Target="TZ" Default="Europe/London" Type="Variable" Display="always"
-        Required="false" Mask="false">Container timezone</Config>
-    <Config Name="MESHCORE_BASE_URL" Target="MESHCORE_BASE_URL"
-        Default="https://files.liamcottle.net/MeshCore" Type="Variable" Display="advanced"
-        Required="false" Mask="false">Base URL for MeshCore downloads</Config>
-    <Config Name="PUID" Target="PUID" Default="99" Type="Variable" Display="advanced"
-        Required="false" Mask="false">User ID for file permissions</Config>
-    <Config Name="PGID" Target="PGID" Default="100" Type="Variable" Display="advanced"
-        Required="false" Mask="false">Group ID for file permissions</Config>
+    <Config Name="HTTP Port" Target="80" Default="8080" Mode="tcp" Type="Port" Display="always" Required="true" Mask="false">Container web UI port</Config>
+    <Config Name="Data" Target="/app/versions" Default="/mnt/user/appdata/meshcore-web/versions" Mode="rw" Type="Path" Display="always" Required="true" Mask="false">Persistent storage for MeshCore versions</Config>
+    <Config Name="TZ" Target="TZ" Default="Europe/London" Type="Variable" Display="always" Required="false" Mask="false">Container timezone</Config>
+    <Config Name="MESHCORE_BASE_URL" Target="MESHCORE_BASE_URL" Default="https://files.liamcottle.net/MeshCore" Type="Variable" Display="advanced" Required="false" Mask="false">Base URL for MeshCore downloads</Config>
+    <Config Name="PUID" Target="PUID" Default="99" Type="Variable" Display="advanced" Required="false" Mask="false">User ID for file permissions</Config>
+    <Config Name="PGID" Target="PGID" Default="100" Type="Variable" Display="advanced" Required="false" Mask="false">Group ID for file permissions</Config>
     <DonateText />
     <DonateLink />
     <Requires>Docker</Requires>
